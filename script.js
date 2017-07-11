@@ -59,7 +59,7 @@ function Node(idd,string,ax,ay){
 	this.links = new Array();
 
 	this.setInfoPanel=function(){
-		document.getElementById("infoLabel").innerHTML="Selected: Node"+this.label+" id:"+this.id+" at "+this.x+","+this.y;
+		document.getElementById("infoLabel").innerHTML="Selected: Node "+this.label+" id:"+this.id+" at "+this.x+","+this.y;
 
 	}
 

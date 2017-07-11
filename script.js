@@ -7,6 +7,7 @@ var FRAME_INTERVAL=30
 var nextId=0
 var ptrSelectedNode;
 var selected
+var removeButton;
 
 var commandCode="InsertNode"
 
@@ -45,6 +46,7 @@ document.addEventListener('keydown', function(event) {
     }
     else if(event.keyCode == 73) { 		// s
 		commandCode="InsertNode"
+
 		updateCommandInfo();
     }
     console.log(event.keyCode)
@@ -144,4 +146,27 @@ function dist(ax,ay,bx,by){
 
 function updateCommandInfo(){
 	document.getElementById("commandMode").innerHTML="Command Mode: "+commandCode
+	if(commandCode=="SelectNode")
+		document.getElementById("commandMode").appendChild(removeButton)
+	else{
+		var myNode = document.getElementById("commandMode");
+		while (myNode.firstChild) {
+		    myNode.removeChild(myNode.firstChild);
+		}
+	}
+
+}
+
+initButtons()
+function initButtons(){
+	removeButton = document.createElement("button");
+	removeButton.style="margin-left:15px;"
+	removeButton.innerHTML = "Remove"
+	removeButton.onclick = function() { 
+		index = nodeArray.indexOf(selected)
+		if(index>-1)
+			nodeArray.splice(index,1)
+		selected=null
+  };
+	
 }

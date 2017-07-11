@@ -1,14 +1,14 @@
 <html>
-	<body>
-	<section>
-		<canvas id = "maincanvas" width="600" height="500" style="border:1px solid #000000;"></canvas>
-	</section>
-	<footer id=asd style="background-color: lightgrey; height: 75; ">
+	<body style="overflow: hidden;margin:0px;padding:0px;">
+	<canvas id = "maincanvas" width="1000px" height="500px" style="border:1px solid #000000; overflow: hidden;margin:0px;padding:0px;"></canvas>
+	<footer id=asd style="background-color: lightgrey; height: 100%; overflow: hidden;">
+	<div>
 			<input type="url" id="picField" size="24"  value = "http://www.archdesignonline.com/service/wp-content/uploads/2014/09/3-Pianta-quotata.png" alt=""/>
 			<button id = "pause" onclick="sub()">   load image  </button>
-			<p id = infoLabel> .</p>
-			<p id = commandMode>.</p>
-			<b> press I to insert nodes, S to select </b>
+			<p id = infoLabel> Selected: </p>
+			<p id = commandMode>Command Mode: InsertNode</p>
+			<b> press I to insert nodes, S to select, L link nodes (todo)</b>
+	</div>
 	</footer>
 	</body>
 	<script src="./script.js"></script>

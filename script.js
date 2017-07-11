@@ -39,8 +39,13 @@ document.addEventListener('keydown', function(event) {
     else if(event.keyCode == 38) {
         cameray-=20
     }
-    else if(event.keyCode == 83) { // s
+    else if(event.keyCode == 83) { 		// s
 		commandCode="SelectNode"
+		updateCommandInfo();
+    }
+    else if(event.keyCode == 73) { 		// s
+		commandCode="InsertNode"
+		updateCommandInfo();
     }
     console.log(event.keyCode)
 },false);
@@ -54,7 +59,7 @@ function Node(idd,string,ax,ay){
 	this.links = new Array();
 
 	this.setInfoPanel=function(){
-		document.getElementById("infoLabel").innerHTML="Selected: Node at "+this.x+","+this.y;
+		document.getElementById("infoLabel").innerHTML="Selected: Node"+this.label+" id:"+this.id+" at "+this.x+","+this.y;
 
 	}
 
@@ -135,4 +140,8 @@ function dist(ax,ay,bx,by){
 	b = Math.pow((ay-by),2)
 	console.log("dist",a,b,a+b,ax,ay,bx,by)
 	return (a+b);
+}
+
+function updateCommandInfo(){
+	document.getElementById("commandMode").innerHTML="Command Mode: "+commandCode
 }

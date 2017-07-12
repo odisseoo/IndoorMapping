@@ -4,10 +4,10 @@
 	<footer id=asd style="background-color: lightgrey; height: 100%; overflow: hidden;">
 	<div>
 			<input type="url" id="picField" size="24"  value = "http://www.archdesignonline.com/service/wp-content/uploads/2014/09/3-Pianta-quotata.png" alt=""/>
-			<button id = "pause" onclick="sub()">   load image  </button>
-			<p id = infoLabel> Selected: </p>
-			<p id = commandMode>Command Mode: InsertNode</p>
-			<b> press I to insert nodes, S to select, L link nodes (todo)</b>
+			<button id = "pause" onclick="sub()">   load image  </button> <button id=buttonShowLabel style="background-color: #ee0000;" onclick="switchLabels()"> show labels</button>
+			<p id = infoLabel> Selected:</p> <button onclick="removeSelectedNode()"> Remove Node </button>
+			<p id = actions> Click to Insert Node</p>
+			<div id = modePanel><button id="buttonInsert" onclick="setMode(this,'InsertNode')" style="background-color: #00dd00" > Insert Mode</button><button id="buttonSelect" onclick="setMode(this,'SelectNode')"> Select Mode</button></div>
 	</div>
 	</footer>
 	</body>

@@ -81,6 +81,21 @@ function Node(idd,string,ax,ay){
 		}
 	}
 }
+function Arc(idd,from,to){
+	this.l1=from;
+	this.l2=to;
+	this.id=idd;
+	this.active=false;
+
+	this.draw=function(ctx){
+		ctx.moveTo(this.l1.x-camerax,this.l1.y-cameray)
+		//@TODO active or not fill style
+		ctx.lineTo(this.l2.x-camerax,this.l2.y-cameray)
+
+	}
+	this.getX=function(){return abs(this.l1.x-this.l2.x)/2;}
+	this.getY=function(){return abs(this.l1.y-this.l2.y)/2;}
+}
 
 function addNode(x,y){
 	n = new Node(nextId,"default label",x+camerax,y+cameray)
@@ -90,13 +105,11 @@ function addNode(x,y){
 }
 
 document.getElementById('maincanvas').addEventListener('click',function(evt){
-	console.log(evt.clientX + ',' + evt.clientY);
 	if(evt.which==1){
 		if(commandCode=="InsertNode")
 			addNode(evt.clientX,evt.clientY)
 		else if(commandCode="SelectNode"){
 			n=findNodeNear(evt.clientX,evt.clientY)
-			console.log("id Selezionato",n.id,n)
 			changeSelected(n)
 
 		}
@@ -126,7 +139,6 @@ function findNodeNear(viewx,viewy){
 		nearestNode=nodeArray[0]
 	}
 	nearDist = dist(nearestNode.x,nearestNode.y,xt,yt)
-	console.log(xt,yt,nearDist)
 	for(i=0;i<nodeArray.length;i++){		//one loop wasted, lazyness
 		candidateNode = nodeArray[i]
 		candDist=dist(candidateNode.x, candidateNode.y,xt,yt)
@@ -143,7 +155,6 @@ function findNodeNear(viewx,viewy){
 function dist(ax,ay,bx,by){ 
 	a= Math.pow((ax-bx),2)
 	b = Math.pow((ay-by),2)
-	console.log("dist",a,b,a+b,ax,ay,bx,by)
 	return (a+b);
 }
 
@@ -210,12 +221,4 @@ function setMode(calee,arg){
 	for(i=0; i<otherButtons.length;i++)
 		otherButtons[i].style="background-color: initial;"
 	calee.style = "background-color: #00dd00;"
-	/*console.log(calee.id)
-	document.getElementById(calee.id).style="background-color: #000000;"
-	console.log(calee.style)
-	if(arg=="InsertNode"){
-		document.getElementById("buttonInsert").style = "background-color: #00dd00;"
-	}
-	else if(arg=="SelectNode")
-		document.getElementById("buttonSelect").style= "background-color: #00dd00;" */
 }

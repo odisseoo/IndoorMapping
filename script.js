@@ -92,14 +92,11 @@ function Edge(idd,from,to){
 	this.id=idd;
 	this.active=false;
 
-	this.draw=function(ctx){
-		ctx.moveTo(this.l1.x-camerax,this.l1.y-cameray)
-		//@TODO active or not fill style
-		ctx.fillStyle("#808080")
-		//
-		ctx.lineTo(this.l2.x-camerax,this.l2.y-cameray)
-		ctx.stroke()
-
+	this.draw=function(){
+		ctx.beginPath();
+		ctx.moveTo(this.l1.x-camerax,this.l1.y-cameray);
+		ctx.lineTo(this.l2.x-camerax,this.l2.y-cameray);
+		ctx.stroke();
 	}
 	this.getX=function(){return abs(this.l1.x-this.l2.x)/2;}
 	this.getY=function(){return abs(this.l1.y-this.l2.y)/2;}
@@ -116,10 +113,9 @@ function addNode(x,y){
 }
 
 function makeEdge(nf,nt){
-	console.log("here")
 	e = new Edge(edgeId,nf,nt);
 	edgeId++;
-	edgeArray.push(n)
+	edgeArray.push(e)
 
 }
 
@@ -237,9 +233,7 @@ function setMode(calee,arg){
 	updateCommandInfo();
 
 	otherButtons = document.getElementById("middle").children;
-	console.log(otherButtons)
 	for(i=0; i<otherButtons.length;i++){
-		console.log(otherButtons[i])
 		otherButtons[i].style="background-color: initial;"
 	}
 	calee.style = "background-color: #00dd00;"

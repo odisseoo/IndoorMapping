@@ -1,15 +1,32 @@
 <html>
-	<body style="overflow: hidden;margin:0px;padding:0px;">
-	<canvas id = "maincanvas" width="1000px" height="500px" style="border:1px solid #000000; overflow: hidden;margin:0px;padding:0px;"></canvas>
+
+<style type="text/css">
+* {margin: 0; padding: 0;}
+#container {height: 100%; width:100%; font-size: 0;}
+#left, #middle, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 15px;text-align: center}
+#left {width: 25%; height: 100%;  }
+#middle {width: 50%; height: 100%; }
+#right {width: 25%; height: 100%; }
+</style>
+<body style="overflow: hidden;margin:0px;padding:0px;">
+	<canvas id = "maincanvas" width="1000px" height="500px" style="border:1px solid #FF0000; overflow: hidden;margin:0px;padding:0px;"></canvas>
 	<footer id=asd style="background-color: lightgrey; height: 100%; overflow: hidden;">
-	<div>
-			<input type="url" id="picField" size="24"  value = "http://www.archdesignonline.com/service/wp-content/uploads/2014/09/3-Pianta-quotata.png" alt=""/>
-			<button id = "pause" onclick="sub()">   load image  </button> <button id=buttonShowLabel style="background-color: #ee0000;" onclick="switchLabels()"> show labels</button>
-			<p id = infoLabel> Selected:</p> <button onclick="removeSelectedNode()"> Remove Node </button>
-			<p id = actions> Click to Insert Node</p>
-			<div id = modePanel><button id="buttonInsert" onclick="setMode(this,'InsertNode')" style="background-color: #00dd00" > Insert Mode</button><button id="buttonSelect" onclick="setMode(this,'SelectNode')"> Select Mode</button></div>
-	</div>
+		<div id="container">
+				<div id="left">
+					<input type="url" id="picField" size="24"  value = "http://www.archdesignonline.com/service/wp-content/uploads/2014/09/3-Pianta-quotata.png" alt=""/>
+					<button id = "load" onclick="sub()">   load image  </button> 
+					<button id=buttonShowLabel style="background-color: #ee0000;" onclick="switchLabels()"> show labels</button>
+				</div>
+				<div id = "middle">
+					<button id="buttonInsert" onclick="setMode(this,'InsertNode')" > Insert Mode</button>
+					<button id="buttonSelect" onclick="setMode(this,'SelectNode')"> Select Mode</button>
+				</div>
+				<div id="right">
+					<p id = infoLabel> Selected:</p> <button onclick="removeSelectedNode()"> Remove Node </button>
+					<p id = actions> Click to Insert Node</p>
+				</div>
+		</div>
 	</footer>
 	</body>
-	<script src="./script.js"></script>
+<script src="./script.js"></script>
 </html>

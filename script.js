@@ -1,17 +1,21 @@
 var ImgLevels = new Array();
 var nodeArray = new Array();
+var edgeArray = new Array();
 var pic = new Image();
 var camerax=cameray=0;
 var running
 var FRAME_INTERVAL=30
 var nextId=0
+var edgeId=0
 var ptrSelectedNode;
 var selected
 var submitRename;
 var inputLabel;
+var lastInsert=null;
 var showLabel=-1; //show labels of nodes
 
 var commandCode="InsertNode"
+dimCanvas()
 
 var canvas = document.getElementById("maincanvas")
 var ctx = canvas.getContext("2d")
@@ -26,8 +30,11 @@ function sub(){
 function update(){
 	
 	ctx.drawImage(pic,-camerax,-cameray)
+	for(i=0; i<edgeArray.length; i++){
+		edgeArray[i].draw();
+	}
 	for(i=0; i<nodeArray.length; i++){
-		nodeArray[i].draw(ctx);
+		nodeArray[i].draw();
 	}
 
 }
@@ -55,18 +62,16 @@ function Node(idd,string,ax,ay){
 	this.x=ax;
 	this.y=ay;
 	this.active=true
-	this.links = new Array();
 
 	this.setInfoPanel=function(){
 		document.getElementById("infoLabel").innerHTML="Selected: Node "+this.label+" id:"+this.id+" at "+this.x+","+this.y;
 
 	}
 
-	this.draw=function(ctx){
+	this.draw=function(){
 		ctx.beginPath();
 		ctx.arc(this.x-camerax,this.y-cameray,20,0,2*Math.PI);
 		if(this.active==true){
-			console.log("should be red")
 			this.setInfoPanel()
 			ctx.fillStyle="#00aa00"
 		}
@@ -81,7 +86,7 @@ function Node(idd,string,ax,ay){
 		}
 	}
 }
-function Arc(idd,from,to){
+function Edge(idd,from,to){
 	this.l1=from;
 	this.l2=to;
 	this.id=idd;
@@ -90,7 +95,10 @@ function Arc(idd,from,to){
 	this.draw=function(ctx){
 		ctx.moveTo(this.l1.x-camerax,this.l1.y-cameray)
 		//@TODO active or not fill style
+		ctx.fillStyle("#808080")
+		//
 		ctx.lineTo(this.l2.x-camerax,this.l2.y-cameray)
+		ctx.stroke()
 
 	}
 	this.getX=function(){return abs(this.l1.x-this.l2.x)/2;}
@@ -98,10 +106,21 @@ function Arc(idd,from,to){
 }
 
 function addNode(x,y){
+	lastInsert=selected
 	n = new Node(nextId,"default label",x+camerax,y+cameray)
 	changeSelected(n)
 	nodeArray.push(n)
 	nextId++;
+	if(lastInsert!=null)
+	makeEdge(lastInsert,selected);
+}
+
+function makeEdge(nf,nt){
+	console.log("here")
+	e = new Edge(edgeId,nf,nt);
+	edgeId++;
+	edgeArray.push(n)
+
 }
 
 document.getElementById('maincanvas').addEventListener('click',function(evt){
@@ -217,8 +236,21 @@ function setMode(calee,arg){
 	commandCode=arg
 	updateCommandInfo();
 
-	otherButtons = document.getElementById("modePanel").children;
-	for(i=0; i<otherButtons.length;i++)
+	otherButtons = document.getElementById("middle").children;
+	console.log(otherButtons)
+	for(i=0; i<otherButtons.length;i++){
+		console.log(otherButtons[i])
 		otherButtons[i].style="background-color: initial;"
+	}
 	calee.style = "background-color: #00dd00;"
+}
+
+function dimCanvas(){
+	d=document.getElementsByTagName("body")[0]
+	wi=d.clientWidth;
+	he=d.clientHeight;
+	canvas = document.getElementById("maincanvas")
+	canvas.width=wi
+	canvas.height=he-100
+
 }

@@ -13,6 +13,7 @@ var submitRename;
 var inputLabel;
 var lastInsert=null;
 var showLabel=-1; //show labels of nodes
+var lastNodeClicked = null;
 
 var commandCode="InsertNode"
 dimCanvas()
@@ -109,24 +110,39 @@ function addNode(x,y){
 	nodeArray.push(n)
 	nextId++;
 	if(lastInsert!=null)
-	makeEdge(lastInsert,selected);
+	addEdge(lastInsert,selected);
 }
 
-function makeEdge(nf,nt){
+function addEdge(nf,nt){
 	e = new Edge(edgeId,nf,nt);
-	edgeId++;
-	edgeArray.push(e)
-
+	if(addEdgeSanityCheck(e)){
+		edgeId++;
+		edgeArray.push(e)
+	}
 }
-
+//CLICK EVENT
 document.getElementById('maincanvas').addEventListener('click',function(evt){
 	if(evt.which==1){
+		console.log("performing "+commandCode)
 		if(commandCode=="InsertNode")
 			addNode(evt.clientX,evt.clientY)
-		else if(commandCode="SelectNode"){
+		else if(commandCode=="SelectNode"){
 			n=findNodeNear(evt.clientX,evt.clientY)
 			changeSelected(n)
-
+		}
+		else if(commandCode=="LinkNode"){
+			console.log("here")
+			if( lastNodeClicked==null){
+				lastNodeClicked=findNodeNear(evt.clientX,evt.clientY)
+				changeSelected(lastNodeClicked)
+			console.log(commandCode)
+			}
+			else{
+				n = findNodeNear(evt.clientX,evt.clientY)
+				if(n.id != lastNodeClicked.id)
+					addEdge(n,lastNodeClicked);	
+				lastNodeClicked=null;		//clear selected node
+			}
 		}
 
 	}
@@ -167,6 +183,22 @@ function findNodeNear(viewx,viewy){
 
 }
 
+//checks if edge alredy exists
+function addEdgeSanityCheck(e){
+	from=e.l1
+	to=e.l2
+	for(i=0; i<edgeArray.length;i++){
+		for(j=0; j<2; j++,temp=from,from=to,to=temp){					// node a to node b and b to a also
+			if(edgeArray[i].l1==from && edgeArray[i].l2==to){ 
+				alert("Edge alredy exists, with id: "+edgeArray[i].id);
+				return false;
+			}
+		}
+	}
+	return true;
+
+}
+
 function dist(ax,ay,bx,by){ 
 	a= Math.pow((ax-bx),2)
 	b = Math.pow((ay-by),2)
@@ -175,6 +207,9 @@ function dist(ax,ay,bx,by){
 
 function updateCommandInfo(){
 	actionNode = document.getElementById("actions")
+	while (actionNode.secondChild) {
+	    actionNode.removeChild(myNode.secondChild);
+	}
 	if(commandCode=="SelectNode"){
 		actionNode.innerHTML=" Rename Node "
 		actionNode.appendChild(inputLabel)
@@ -184,9 +219,10 @@ function updateCommandInfo(){
 	}
 	else if(commandCode=="InsertNode"){
 		actionNode.innerHTML=" Click to Insert Node"
-		while (actionNode.secondChild) {
-		    actionNode.removeChild(myNode.secondChild);
-		}
+	}
+	else if(commandCode=="LinkNode"){
+		actionNode.innerHTML=" Click on two nodes to link them"
+		lastNodeClicked=null;
 	}
 
 }

@@ -10,6 +10,9 @@ var edgeId=0
 var ptrSelectedNode;
 var selected
 var submitRename;
+var removeNode;
+var deleteEdge;
+var deleteEdgeBool=false;
 var inputLabel;
 var lastInsert=null;
 var showLabel=-1; //show labels of nodes
@@ -113,6 +116,13 @@ function addNode(x,y){
 	addEdge(lastInsert,selected);
 }
 
+function removeSelectedNode(){
+		index = nodeArray.indexOf(selected)
+		if(index>-1)
+			nodeArray.splice(index,1)
+		selected=null
+}
+
 function addEdge(nf,nt){
 	e = new Edge(edgeId,nf,nt);
 	if(addEdgeSanityCheck(e)){
@@ -120,10 +130,25 @@ function addEdge(nf,nt){
 		edgeArray.push(e)
 	}
 }
+
+function removeEdge(nf,nt){
+	from=nf 
+	to=nt
+	for(i=0; i<edgeArray.length;i++){
+		for(j=0; j<2; j++,temp=from,from=to,to=temp){					// node a to node b and b to a also
+			if(edgeArray[i].l1==from && edgeArray[i].l2==to){ 
+				edgeArray.splice(i,1)
+				lastNodeClicked=null;
+				changeSelected(null)
+				return;
+			}
+		}
+	}	
+
+}
 //CLICK EVENT
 document.getElementById('maincanvas').addEventListener('click',function(evt){
 	if(evt.which==1){
-		console.log("performing "+commandCode)
 		if(commandCode=="InsertNode")
 			addNode(evt.clientX,evt.clientY)
 		else if(commandCode=="SelectNode"){
@@ -135,12 +160,15 @@ document.getElementById('maincanvas').addEventListener('click',function(evt){
 			if( lastNodeClicked==null){
 				lastNodeClicked=findNodeNear(evt.clientX,evt.clientY)
 				changeSelected(lastNodeClicked)
-			console.log(commandCode)
 			}
 			else{
 				n = findNodeNear(evt.clientX,evt.clientY)
-				if(n.id != lastNodeClicked.id)
-					addEdge(n,lastNodeClicked);	
+				if(n.id != lastNodeClicked.id){
+					if(!deleteEdgeBool)
+						addEdge(n,lastNodeClicked);	
+					else
+						removeEdge(n,lastNodeClicked);
+				}
 				lastNodeClicked=null;		//clear selected node
 			}
 		}
@@ -156,8 +184,10 @@ function changeSelected(n){
 	if(selected!=null){
 		selected.active=false
 	}
-	selected=n
-	selected.active=true
+	if(n!=null){
+		selected=n
+		selected.active=true
+	}
 
 }
 
@@ -207,25 +237,31 @@ function dist(ax,ay,bx,by){
 
 function updateCommandInfo(){
 	actionNode = document.getElementById("actions")
+	changeSelected(null)
 	while (actionNode.secondChild) {
+		console.log(secondChild.id)
 	    actionNode.removeChild(myNode.secondChild);
 	}
 	if(commandCode=="SelectNode"){
 		actionNode.innerHTML=" Rename Node "
 		actionNode.appendChild(inputLabel)
 		actionNode.appendChild(submitRename)
-		actionNode.appendChild(submitRename)
+		actionNode.appendChild(removeNode);
 
 	}
 	else if(commandCode=="InsertNode"){
 		actionNode.innerHTML=" Click to Insert Node"
+		actionNode.appendChild(removeNode);
 	}
 	else if(commandCode=="LinkNode"){
 		actionNode.innerHTML=" Click on two nodes to link them"
+		deleteEdgeBool=false;
+		actionNode.appendChild(deleteEdge)
 		lastNodeClicked=null;
 	}
 
 }
+
 
 function switchLabels(){
 	showLabel*=-1
@@ -254,15 +290,32 @@ function initButtons(){
   	inputLabel.style="padding-left:10px;"
   	if(selected)
   		inputLabel.value = selected.label
+
+  	deleteEdge = document.createElement("button");  	
+	deleteEdge.style="margin-left:15px;"
+	deleteEdge.innerHTML = "Delete Edges"
+	deleteEdge.onclick = function() {
+		changeSelected(null)
+		lastNodeClicked=null;
+		if(!deleteEdgeBool){
+			deleteEdgeBool=true
+			deleteEdge.style="margin-left:15px;background-color: #009900;"
+		}
+		else{
+			deleteEdgeBool=false;
+			deleteEdge.style="margin-left:15px;background-color:initial;"
+		}
+  	};
+
+  	removeNode = document.createElement("button");  	
+	removeNode.style="margin-left:15px;"
+	removeNode.innerHTML = "Remove Node"
+	removeNode.onclick = function() { 
+		removeSelectedNode();
+  	}
 	
 }
 
-function removeSelectedNode(){
-		index = nodeArray.indexOf(selected)
-		if(index>-1)
-			nodeArray.splice(index,1)
-		selected=null
-}
 
 function setMode(calee,arg){
 	commandCode=arg
